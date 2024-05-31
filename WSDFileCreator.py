@@ -116,45 +116,34 @@ class WSDFileCreator:
             self.DataFilepaths[index].set(filename)
 
     def update_file_references(self): # チャンネル配置を選択したときにファイルパスを選択できるようにするフレーム
-    # 既存のエントリーやボタンを削除
         for label, entry, button in self.file_references:
             label.destroy()
             entry.destroy()
             button.destroy()
         self.file_references = []
-
-        # チェックボックスの状態に応じてエントリーとボタンを再作成
         for i, num in enumerate(self.checkbox):
             if num.get() == 1:
                 label_text = f"Audio data of {self.options[i]}： "
                 label = ttk.Label(self.frameoop, text=label_text)
                 label.pack(anchor=tk.W, pady=(10, 0))
-
                 entry = ttk.Entry(self.frameoop, textvariable=self.DataFilepaths[i], width=30)
                 entry.pack(anchor=tk.W)
-
                 button = ttk.Button(self.frameoop, text="Browse", command=lambda i=i: self.filedialog_clicked(i))
                 button.pack(anchor=tk.W)
-
                 self.file_references.append((label, entry, button))
             else:
-                # チェックボックスが外されている場合、そのエントリーの内容をクリア
                 self.DataFilepaths[i].set("")
 
         if self.channel_var.get() == 'Yes':
             label_text = f"Audio data of LFE： "
             label = ttk.Label(self.frameoop, text=label_text)
             label.pack(side="top", anchor="w")
-
             entry = ttk.Entry(self.frameoop, textvariable=self.DataFilepaths[10], width=30)
             entry.pack(anchor=tk.W)
-
             button = ttk.Button(self.frameoop, text="Browse", command=lambda: self.filedialog_clicked(10))
             button.pack(anchor=tk.W)
-
             self.file_references.append((label, entry, button))
         else:
-                # チェックボックスが外されている場合、そのエントリーの内容をクリア
                 self.DataFilepaths[10].set("")
 
     def create_cycle(self, *binaries):#多チャンネルの際に8bitのアラインをつくる
@@ -206,10 +195,8 @@ class WSDFileCreator:
             checkbox_vars.append(num.get())
         checked_count = sum(checkbox_vars)
         if (Ch_N == 1 and LFE == 0 and checked_count in [0, 2]):
-            print("1")
             return True
         elif Ch_N == (checked_count + LFE):
-            print("2")
             return True
         else:
             tk.messagebox.showerror("Error", "The number of channels does not match Channel Assignment.")
@@ -219,10 +206,8 @@ class WSDFileCreator:
     def create_text_binary(self):
         for i, (_, _, max_length) in enumerate(self.fields):
             if i < len(self.Text):
-                # self.Textの対応する行を取得
                 label_text = self.Text[i]
             else:
-                # 対応する行がない場合は空文字列を使用
                 label_text = ""
             entry_text = label_text[:max_length].ljust(max_length, ' ')
             entry_binary = entry_text.encode('utf-8').hex()
